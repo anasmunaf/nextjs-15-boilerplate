@@ -12,6 +12,9 @@ import InboxIcon from "@mui/icons-material/Inbox";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import { useRouter, usePathname } from "next/navigation";
 import { appRoute } from "@/constants/routes";
+import { Grid2, IconButton } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { onLogout } from "@/app/(auth)/login/actions";
 
 export default function Sidebar() {
   const router = useRouter();
@@ -48,12 +51,17 @@ export default function Sidebar() {
       }}
     >
       {/* User Info */}
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Avatar sx={{ bgcolor: "#4f46e5", mr: 2 }}>U</Avatar>
-        <Typography variant="h6" noWrap>
-          User Name
-        </Typography>
-      </Box>
+      <Grid2 container justifyContent={"space-between"} alignItems="start">
+        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          <Avatar sx={{ bgcolor: "#4f46e5", mr: 2 }}>U</Avatar>
+          <Typography variant="h6" noWrap>
+            User Name
+          </Typography>
+        </Box>
+        <IconButton color="warning" onClick={onLogout}>
+          <LogoutIcon />
+        </IconButton>
+      </Grid2>
 
       <Divider sx={{ borderColor: "rgba(255, 255, 255, 0.3)" }} />
 

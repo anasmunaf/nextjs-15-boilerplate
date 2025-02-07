@@ -31,22 +31,18 @@ const pages = () => {
   const [state, action, isPending] = useActionState(onLogin, initialState);
   const router = useRouter();
 
-  const {
-    handleSubmit,
-    control,
-    formState: { isLoading },
-  } = useForm({
+  const { control } = useForm({
     defaultValues: {
       username: "emilys",
       password: "emilyspass",
     },
   });
 
-  async function onSubmit(values: any) {
-    const response = await getData(values);
-    localStorage.setItem("token", response.accessToken);
-    router.push(appRoute.dashboard);
-  }
+  // async function onSubmit(values: any) {
+  //   const response = await getData(values);
+  //   localStorage.setItem("token", response.accessToken);
+  //   router.push(appRoute.dashboard);
+  // }
 
   return (
     <Grid2
@@ -71,7 +67,13 @@ const pages = () => {
             name="username"
             control={control}
             render={({ field }) => (
-              <TextField label="Email" variant="outlined" {...field} />
+              <TextField
+                label="Email"
+                variant="outlined"
+                error={!!state?.errors?.username}
+                helperText={state?.errors?.username}
+                {...field}
+              />
             )}
           />
           <Controller
@@ -82,6 +84,8 @@ const pages = () => {
                 label="Password"
                 variant="outlined"
                 type="password"
+                error={!!state?.errors?.password}
+                helperText={state?.errors?.password}
                 {...field}
               />
             )}
@@ -91,6 +95,7 @@ const pages = () => {
             variant="contained"
             size="large"
             disabled={isPending}
+            loading={isPending}
           >
             Login
           </Button>

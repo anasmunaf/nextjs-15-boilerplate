@@ -1,8 +1,9 @@
 "use server";
 
-import { appRoute } from "@/constants/routes";
+import { appRoute, authRoute } from "@/constants/routes";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { loginSchema, loginStateType } from "./schema";
 
 function getValues(form: FormData) {
   const obj: any = {};
@@ -23,11 +24,28 @@ async function getData(body: any) {
 
 export default async function onLogin(state: any, values: any) {
   const value = getValues(values);
+
+  const validateFields = loginSchema.safeParse({
+    username: value.username,
+    password: value.password,
+  });
+
+  if (!validateFields.success) {
+    return {
+      errors: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
   const response = await getData(value);
 
   (await cookies()).set("token", response.accessToken);
   redirect(appRoute.dashboard);
   return { ...state, response };
+}
+
+export async function onLogout() {
+  (await cookies()).delete("token");
+  redirect(authRoute.login);
 }
 
 function setStorage(key: string, value: string) {
